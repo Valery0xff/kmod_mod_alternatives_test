@@ -1,0 +1,62 @@
+From f69d0d355a7e4ce4c78f70b88181f0d74314e01b Mon Sep 17 00:00:00 2001
+From: Valerii Chernous <vchernou@cisco.com>
+Date: Thu, 21 Dec 2023 07:59:53 -0800
+Subject: [PATCH 4/4] add modules deps alternatives description
+
+Cc: xe-linux-external@cisco.com
+Cc: Valerii Chernous <vchernou@cisco.com>
+Signed-off-by: Valerii Chernous <vchernou@cisco.com>
+---
+ README.deps.alternatives.txt | 40 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 README.deps.alternatives.txt
+
+diff --git a/README.deps.alternatives.txt b/README.deps.alternatives.txt
+new file mode 100644
+index 0000000..9ad3ce5
+--- /dev/null
++++ b/README.deps.alternatives.txt
+@@ -0,0 +1,40 @@
++Modules alternatives feature allow to calculate dependency alternatives
++during build time and aviod to regenerate modules db into runtime
++
++To enable deps alternatives calculation use "-D" flag with depmod,
++it will create indexes modules.alternatives and modules.alternatives.bin
++This indexes will be used by modprobe in runtime
++By default modprobe will load first(primary/major) dependency from list
++If it required to load alternative module, it should be done manually before
++loading main modules set.
++For example systemd service that detect platform type can load required platform
++modules and after it run main device initialization
++In case when alternative module loaded, modprobe detect this and skip to load primary
++dependency
++
++modules deps alternatives generation basic algorithm description
++1. Load modules information(imported/exported symbols)
++2. Find depended symbol alternatives(create list available symbols
++   alternatives instead of storing last one)
++3. Choise primary/major alternative per depended symbol correspond to
++   build time dependency(build time deps getting from module info section)
++4. Create a list of dependency modules alternatives correspond to next rule:
++4.1 All modules alternatives for module dependency should provide all symbols
++    from primary/major dependency module
++5 Store modules alternatives index(modules.alternatives) as key:value where
++key is a pair depended#_#primary_depency,
++value is list of all modules that provide all symbols from primary_depency
++for depended module
++
++Note:
++Current implementation/algorithm doesn't cover variant where requred symbols
++from primary deps provided by more that one modules. Exporting all symbols in
++alternative depency that used by depended module from primary_depency is
++mandatory!
++
++Note:
++modules.dep index different for standard/basic and modules alternatives algorithms
++modules.dep for modules alternatives algorithm contain only direct dependencies and
++full dependency list will be calculated into runtime correspond to preferred alternative.
++modules.dep for standard/basic algorithm contain full dependency list for module and
++can't be changed during runtime without rebuild database via depmod
+-- 
+2.35.6
+
