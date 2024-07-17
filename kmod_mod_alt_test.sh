@@ -5,7 +5,7 @@
 # Using modprobe to insert modules required sudo rigths so run this test
 # under user with sudo rigths
 
-set -x
+#set -x
 
 KMOD_GIT_URL="https://github.com/kmod-project/kmod.git"
 KMOD_COMMIT="fa715f8c8b78a09f47701ce1cf46e9b67a49b8d0" #base kmod commit
@@ -19,6 +19,37 @@ KMOD_PATCHES=" \
 die() {
 	echo "$1"
 	exit 1
+}
+
+
+#Params:
+#1 - KERNEL_HDR_DIR(kernel source/headers dir)
+#2 - MOD_SRC_DIR(test modules source tree root dir)
+#3 - MOD_INST_DIR - modules install dir
+#4 - DIR(test module subdir into MOD_SRC_DIR)
+build_install_single_mod() {
+	local lKERNEL_HDR_DIR=$1
+	local lMOD_SRC_DIR=$2
+	local lMOD_INST_DIR=$3
+	local lDIR=$4
+	local lEXTRA_SYM_STR=""
+	dep_file="$lMOD_SRC_DIR/$lDIR/depends.txt"
+	if [ -f $dep_file ]; then
+		deps=`cat $dep_file`
+		for dep in $deps
+		do
+			build_install_single_mod $lKERNEL_HDR_DIR $lMOD_SRC_DIR $lMOD_INST_DIR $dep
+			lEXTRA_SYM_STR="$lMOD_SRC_DIR/$dep/Module.symvers $lEXTRA_SYM_STR"
+		done
+	fi
+	echo "Compiling module for: $lMOD_SRC_DIR/$lDIR"
+	cur_pwd=`pwd`
+	cd $lMOD_SRC_DIR/$lDIR
+	make -C $lKERNEL_HDR_DIR M=$(pwd) KBUILD_EXTRA_SYMBOLS="$lEXTRA_SYM_STR"
+	[ $? != 0 ] && die "Build module failed for: $lMOD_SRC_DIR/$lDIR"
+	make -C $lKERNEL_HDR_DIR M=$(pwd) DEPMOD="echo" INSTALL_MOD_PATH="$lMOD_INST_DIR" INSTALL_MOD_DIR="extra" modules_install
+	[ $? != 0 ] && die "Can't instal module from: $lMOD_SRC_DIR/$lDIR to $lMOD_INST_DIR"
+	cd $cur_pwd
 }
 
 git --help &>/dev/null || die "Can't run git, please install git via your pkg manager"
@@ -65,5 +96,32 @@ make DESTDIR=$KMOD_INSTALL_DIR install
 [ "x$?" != "x0" ] && die "kmod install to $KMOD_INSTALL_DIR failed, check install logs and kmod docs to solve the problem"
 
 echo "Building kmod with modules alternatives feature finished, utilities installed into $KMOD_INSTALL_DIR"
+sleep 2
+
+echo "Building kernel modules for testing"
+
+if [ "x$KERNEL_HDR_DIR" = "x" ]; then
+	KERNEL_HDR_DIR=`echo /usr/src/linux-headers-$(uname -r)`
+fi
+[ ! -d $KERNEL_HDR_DIR ] && die "Kernel headers die $KERNEL_HDR_DIR absent, please, setup proper value via KERNEL_HDR_DIR variable"
+
+MOD_SRC_DIR="$KMOD_TEST_DIR/kmods_examples"
+[ ! -d $MOD_SRC_DIR ] && die "Something wrong with test repo, can't find modules src dir: $KMOD_TEST_DIR"
+cur_dir=`pwd`
+cd $MOD_SRC_DIR
+MOD_SRC_SUBDIRS=`ls -d */`
+cd $cur_dir
+[ "x$MOD_SRC_SUBDIRS" = "x" ] && die "Something wrong with test repo, can't find modules src subdirs in: $KMOD_TEST_DIR"
+
+for dir in $MOD_SRC_SUBDIRS
+do
+	build_install_single_mod $KERNEL_HDR_DIR $MOD_SRC_DIR $KMOD_INSTALL_DIR $dir
+done
+
+echo "Build kernel modules examples finished"
+sleep 2
+
+
+
 exit 0
 
