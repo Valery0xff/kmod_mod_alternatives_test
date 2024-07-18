@@ -96,6 +96,17 @@ make DESTDIR=$KMOD_INSTALL_DIR install
 [ "x$?" != "x0" ] && die "kmod install to $KMOD_INSTALL_DIR failed, check install logs and kmod docs to solve the problem"
 
 echo "Building kmod with modules alternatives feature finished, utilities installed into $KMOD_INSTALL_DIR"
+
+echo "Checking presence of required kmod utils..."
+DEPMOD="$KMOD_INSTALL_DIR/usr/bin/depmod"
+MODINFO="$KMOD_INSTALL_DIR/usr/bin/modinfo"
+MODPROBE="$KMOD_INSTALL_DIR/usr/bin/modprobe"
+RMMOD="$KMOD_INSTALL_DIR/usr/bin/rmmod"
+
+[ ! -x $DEPMOD ] && die "Can't find depmod utility at: $DEPMOD"
+[ ! -x $MODINFO ] && die "Can't find modinfo utility at: $MODINFO"
+[ ! -x $MODPROBE ] && die "Can't find modprobe utility at: $MODPROBE"
+[ ! -x $RMMOD ] && die "Can't find rmmod utility at: $RMMOD"
 sleep 2
 
 echo "Building kernel modules for testing"
@@ -121,6 +132,37 @@ done
 echo "Build kernel modules examples finished"
 sleep 2
 
+echo "modules.buildin* indexes from main kernel required to load test modules"
+echo "Copying modules.buildin* from current kernel to test module dir"
+cp -f /lib/modules/$(uname -r)/modules.builtin* $KMOD_INSTALL_DIR/lib/modules/$(uname -r)/
+echo "Generating modules db indexes for test modules via baseline algorithm"
+MODDB_STD_DIR="$KMOD_INSTALL_DIR/moddb_std"
+CMD="$DEPMOD -b $KMOD_INSTALL_DIR -o $MODDB_STD_DIR"
+$CMD
+[ $? != 0 ] && die "Can't generate modules db index via cmd: $CMD"
+echo "Modules db indexes stored to: $MODDB_STD_DIR"
+
+echo "Generating modules db indexes for test modules with alternatives algorithm"
+MODDB_ALT_DIR="$KMOD_INSTALL_DIR/moddb_alt"
+CMD="$DEPMOD -D -b $KMOD_INSTALL_DIR -o $MODDB_ALT_DIR"
+$CMD
+[ $? != 0 ] && die "Can't generate modules db index via cmd: $CMD"
+echo "Modules db indexes stored to: $MODDB_ALT_DIR"
+
+MOD_DEPS_STD_F=`find $MODDB_STD_DIR -name "modules.dep"`
+[ "x$MOD_DEPS_STD_F" = "x" ] && die "Can't find modules.dep file in $MODDB_STD_DIR"
+
+MOD_DEPS_ALT_F=`find $MODDB_ALT_DIR -name "modules.dep"`
+[ "x$MOD_DEPS_ALT_F" = "x" ] && die "Can't find modules.dep file in $MODDB_ALT_DIR"
+
+echo ""
+echo "Modules dependencies with baseline algo:"
+cat $MOD_DEPS_STD_F
+echo "#------------------------#"
+echo ""
+echo "Modules dependencies with alternatives algo:"
+cat $MOD_DEPS_ALT_F
+echo "#------------------------#"
 
 
 exit 0
