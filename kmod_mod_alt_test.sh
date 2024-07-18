@@ -21,6 +21,14 @@ die() {
 	exit 1
 }
 
+#echo string to output and file
+#Params:
+#$1 - string
+#$2 - filename
+echo_dup() {
+	echo $1
+	echo $1 >>$2
+}
 
 #Params:
 #1 - KERNEL_HDR_DIR(kernel source/headers dir)
@@ -50,6 +58,85 @@ build_install_single_mod() {
 	make -C $lKERNEL_HDR_DIR M=$(pwd) DEPMOD="echo" INSTALL_MOD_PATH="$lMOD_INST_DIR" INSTALL_MOD_DIR="extra" modules_install
 	[ $? != 0 ] && die "Can't instal module from: $lMOD_SRC_DIR/$lDIR to $lMOD_INST_DIR"
 	cd $cur_pwd
+}
+
+
+#Params:
+#1 - module name(like mod.ko)
+#2 - modules location dir(like KMOD_INST_DIR/lib/modules)
+#3 - modules.dep file
+#4 - modinfo utility path
+#5 - output report file
+check_mod_deps() {
+	local lMOD=$1
+	local lMOD_DIR=$2
+	local lMOD_DEP_F=$3
+	local lMODINFO=$4
+	local lOUT_F=$5
+	mod_f_path=`find $lMOD_DIR -name $lMOD`
+	[ "x$mod_f_path" = "x" ] && die "check_mod_deps: Can't find module path for $lMOD"
+	minfo_deps=`$lMODINFO -Fdepends $mod_f_path`
+	#modinfo deps is comma separated, rework list to something that correspond modules.dep format
+	build_deps=""
+	OIFS=$IFS
+	IFS=","
+	for dep in $minfo_deps
+	do
+		#all external modules, by default, placed to extra dir by kernel build system
+		build_deps="extra/$dep.ko $build_deps"
+	done
+	IFS=$OIFS
+	#echo "mod: $lMOD, build deps: $build_deps"
+	mod_deps=`cat $lMOD_DEP_F | grep -e "^extra/$lMOD:" | awk -F": " '{print $2}'`
+
+	#exclude each deps of one type from another to make comparithion
+	mod_deps_cp=$mod_deps
+	for dep in $build_deps
+	do
+		out_s=`echo $mod_deps_cp | sed 's|'$dep'||g'`
+		mod_deps_cp=$out_s
+	done
+	build_deps_cp=$build_deps
+	for dep in $mod_deps
+	do
+		out_s=`echo $build_deps_cp | sed 's|'$dep'||g'`
+		build_deps_cp=$out_s
+	done
+
+	#calculate dependencies status
+	diff_s="$build_deps_cp $mod_deps_cp"
+	diff_cnt=`echo $diff_s | awk '{print NF}'`
+	if [ "x$diff_cnt" != "x0" ]; then
+		DEP_STAT="different"
+		#check is generated deps loadable(functions/api overlapping)
+		API_LIST=""
+		API_CONFLICT=""
+		for dep in $mod_deps
+		do
+			dep_api_str=`echo "$dep" | sed 's/.*api*//g' | sed 's/\.ko$//g' | awk -v FS="" '{for (i=1;i<=NF;i++) printf $i" "}'`
+			for api in $dep_api_str
+			do
+				is_api_in_list=`echo $API_LIST | grep $api`
+				if [ "x$is_api_in_list" != "x" ]; then
+					API_CONFLICT="1"
+					break
+				else
+					API_LIST="$api $API_LIST"
+				fi
+			done
+			if [ "x$API_CONFLICT" != "x" ]; then
+				DEP_STAT="\e[0;31mconflict\e[0m"
+				break
+			fi
+		done
+	else
+		DEP_STAT="equal"
+	fi
+	mod_deps_out=$mod_deps
+	if [ "x$mod_deps_out" = "x" ]; then
+		mod_deps_out="\t"
+	fi
+	echo_dup "$lMOD\t$DEP_STAT\t$mod_deps_out\t$mod_f_path" $lOUT_F
 }
 
 git --help &>/dev/null || die "Can't run git, please install git via your pkg manager"
@@ -164,6 +251,34 @@ echo "Modules dependencies with alternatives algo:"
 cat $MOD_DEPS_ALT_F
 echo "#------------------------#"
 
+
+echo "Checking moddb dependencies to corresponding buildtime dependencies"
+echo "Using generated deps from modules.dep file and build deps from modinfo util"
+echo ""
+
+MOD_LIST=`find $KMOD_INSTALL_DIR/lib/modules -name "*.ko" | awk -F/ '{print $NF}'`
+[ "x$MOD_LIST" = "x" ] && die "Can't find any module in $KMOD_INSTALL_DIR/lib/modules"
+
+#echo "MOD_LIST: $MOD_LIST"
+
+DEP_REPORT_F="$KMOD_TEST_DIR/deps_report.txt"
+rm -f $DEP_REPORT_F
+echo "" >$DEP_REPORT_F
+echo_dup "Comparing modules deps for baseline algo" $DEP_REPORT_F
+echo_dup "mod:\tdesp stat:\tmodules.dep deps:\tmod path:" $DEP_REPORT_F
+for mod in $MOD_LIST
+do
+	check_mod_deps $mod $KMOD_INSTALL_DIR/lib/modules $MOD_DEPS_STD_F $MODINFO $DEP_REPORT_F
+done
+echo_dup "#------------------------#" $DEP_REPORT_F
+echo_dup "" $DEP_REPORT_F
+echo_dup "Comparing modules deps for alternatives algo" $DEP_REPORT_F
+echo_dup "mod:\tdesp stat:\tmodules.dep deps:\tmod path:" $DEP_REPORT_F
+for mod in $MOD_LIST
+do
+	check_mod_deps $mod $KMOD_INSTALL_DIR/lib/modules $MOD_DEPS_ALT_F $MODINFO $DEP_REPORT_F
+done
+echo_dup "#------------------------#" $DEP_REPORT_F
 
 exit 0
 
