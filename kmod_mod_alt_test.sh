@@ -189,11 +189,13 @@ DEPMOD="$KMOD_INSTALL_DIR/usr/bin/depmod"
 MODINFO="$KMOD_INSTALL_DIR/usr/bin/modinfo"
 MODPROBE="$KMOD_INSTALL_DIR/usr/bin/modprobe"
 RMMOD="$KMOD_INSTALL_DIR/usr/bin/rmmod"
+LSMOD="$KMOD_INSTALL_DIR/usr/bin/lsmod"
 
 [ ! -x $DEPMOD ] && die "Can't find depmod utility at: $DEPMOD"
 [ ! -x $MODINFO ] && die "Can't find modinfo utility at: $MODINFO"
 [ ! -x $MODPROBE ] && die "Can't find modprobe utility at: $MODPROBE"
 [ ! -x $RMMOD ] && die "Can't find rmmod utility at: $RMMOD"
+[ ! -x $LSMOD ] && die "Can't find lsmod utility at: $LSMOD"
 sleep 2
 
 echo "Building kernel modules for testing"
@@ -279,6 +281,27 @@ do
 	check_mod_deps $mod $KMOD_INSTALL_DIR/lib/modules $MOD_DEPS_ALT_F $MODINFO $DEP_REPORT_F
 done
 echo_dup "#------------------------#" $DEP_REPORT_F
+echo ""
+echo "Now demonstrate modules alternatives feature with loading default and alternatives api provides"
 
+echo "Copy mods from $KMOD_INSTALL_DIR/lib/modules to mods alternatives index dir $MODDB_ALT_DIR"
+cp -fr $KMOD_INSTALL_DIR/lib/modules/* $MODDB_ALT_DIR/lib/modules/
+[ "x$?" != "x0" ] && die "Can't copy modules to $MODDB_ALT_DIR"
+
+echo "Loading and removing modules require root privilege"
+echo "Current user should be part of sudoers"
+echo "test script use next cmd for removing test modules: lsmod | grep -e \"^mod_.*api\""
+echo "Please, check is some already loaded modules into your system correspond to this filter!"
+echo "Don't run modules load test if some real module used!"
+echo "Press enter to continue"
+read varname
+
+LOAD_MODS_REPORT_F="$KMOD_TEST_DIR/load_mods_report.txt"
+echo "cmd: load_mods_alt_test.sh $LOAD_MODS_REPORT_F $MODPROBE $RMMOD $LSMOD $MODDB_TST_DIR"
+sudo $KMOD_TEST_DIR/load_mods_alt_test.sh $LOAD_MODS_REPORT_F $MODPROBE $RMMOD $LSMOD $MODDB_ALT_DIR
+
+echo "Reporst stored to:"
+echo "Dependencies: $DEP_REPORT_F"
+echo "Loading modules: $LOAD_MODS_REPORT_F"
 exit 0
 
