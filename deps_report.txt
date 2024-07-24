@@ -1,0 +1,36 @@
+
+Comparing modules deps for baseline algo
+mod:	desp stat:	modules.dep deps:	mod path:
+mod_k_dapi123.ko	[0;31mconflict[0m	extra/mod_fc_api34.ko extra/mod_e_api123.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_k_dapi123.ko
+mod_h_dapi1.ko	different	extra/mod_e_api123.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_h_dapi1.ko
+mod_fb_api12.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_fb_api12.ko
+mod_b_api1.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_b_api1.ko
+mod_d_api2.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_d_api2.ko
+mod_c_api1.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_c_api1.ko
+mod_l_dapi1234.ko	[0;31mconflict[0m	extra/mod_fc_api34.ko extra/mod_e_api123.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_l_dapi1234.ko
+mod_f_api2.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_f_api2.ko
+mod_fc_api34.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_fc_api34.ko
+mod_fa_api1.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_fa_api1.ko
+mod_j_dapi12.ko	different	extra/mod_e_api123.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_j_dapi12.ko
+mod_g_dapi1.ko	different	extra/mod_e_api123.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_g_dapi1.ko
+mod_e_api123.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_e_api123.ko
+mod_a_api1.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_a_api1.ko
+#------------------------#
+
+Comparing modules deps for alternatives algo
+mod:	desp stat:	modules.dep deps:	mod path:
+mod_k_dapi123.ko	equal	extra/mod_e_api123.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_k_dapi123.ko
+mod_h_dapi1.ko	equal	extra/mod_b_api1.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_h_dapi1.ko
+mod_fb_api12.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_fb_api12.ko
+mod_b_api1.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_b_api1.ko
+mod_d_api2.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_d_api2.ko
+mod_c_api1.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_c_api1.ko
+mod_l_dapi1234.ko	equal	extra/mod_fc_api34.ko extra/mod_fb_api12.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_l_dapi1234.ko
+mod_f_api2.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_f_api2.ko
+mod_fc_api34.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_fc_api34.ko
+mod_fa_api1.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_fa_api1.ko
+mod_j_dapi12.ko	equal	extra/mod_d_api2.ko extra/mod_c_api1.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_j_dapi12.ko
+mod_g_dapi1.ko	equal	extra/mod_a_api1.ko	/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_g_dapi1.ko
+mod_e_api123.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_e_api123.ko
+mod_a_api1.ko	equal			/home/valery/kmod_modules_alternatives/kmod_inst/lib/modules/6.8.0-38-generic/extra/mod_a_api1.ko
+#------------------------#

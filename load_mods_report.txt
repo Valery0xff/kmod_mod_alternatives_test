@@ -1,0 +1,230 @@
+Loading modules with default api providers
+#--------------------------------#
+Loading modules with default deps
+#----#
+Modules before load mod_g_dapi1:
+Module                  Size  Used by
+#----#
+Loading module: mod_g_dapi1
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_g_dapi1
+Loading module: mod_g_dapi1 success
+Logs from mod_g_dapi1 module:
+Jul 24 11:50:05 valery-vbox kernel: mod_g_dapi1: init mod_g default dependency on mod_a_api1
+Jul 24 11:50:05 valery-vbox kernel: mod_g_dapi1: data from api1 provider: data from mod a api1
+#----#
+Modules after load mod_g_dapi1:
+Module                  Size  Used by
+mod_g_dapi1            12288  0
+mod_a_api1             12288  1 mod_g_dapi1
+#----#
+#----#
+Modules before load mod_h_dapi1:
+Module                  Size  Used by
+#----#
+Loading module: mod_h_dapi1
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_h_dapi1
+Loading module: mod_h_dapi1 success
+Logs from mod_h_dapi1 module:
+Jul 24 11:50:05 valery-vbox kernel: mod_h_dapi1: init mod_h default dependency on mod_b_api1
+Jul 24 11:50:05 valery-vbox kernel: mod_h_dapi1: data from api1 provider: data from mod b api1
+#----#
+Modules after load mod_h_dapi1:
+Module                  Size  Used by
+mod_h_dapi1            12288  0
+mod_b_api1             12288  1 mod_h_dapi1
+#----#
+#----#
+Modules before load mod_j_dapi12:
+Module                  Size  Used by
+#----#
+Loading module: mod_j_dapi12
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_j_dapi12
+Loading module: mod_j_dapi12 success
+Logs from mod_j_dapi12 module:
+Jul 24 11:50:05 valery-vbox kernel: mod_j_dapi12: init mod_j default dependency on mod_c_api1, mod_d_api2
+Jul 24 11:50:05 valery-vbox kernel: mod_j_dapi12: data from api1 provider: data from mod c api1
+Jul 24 11:50:05 valery-vbox kernel: mod_j_dapi12: data from api2 provider: data from mod d api2
+#----#
+Modules after load mod_j_dapi12:
+Module                  Size  Used by
+mod_j_dapi12           12288  0
+mod_d_api2             12288  1 mod_j_dapi12
+mod_c_api1             12288  1 mod_j_dapi12
+#----#
+#----#
+Modules before load mod_k_dapi123:
+Module                  Size  Used by
+#----#
+Loading module: mod_k_dapi123
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_k_dapi123
+Loading module: mod_k_dapi123 success
+Logs from mod_k_dapi123 module:
+Jul 24 11:50:05 valery-vbox kernel: mod_k_dapi123: init mod_k default dependency on mod_e_api123
+Jul 24 11:50:05 valery-vbox kernel: mod_k_dapi123: data from api1 provider: data from mod e api1
+Jul 24 11:50:05 valery-vbox kernel: mod_k_dapi123: data from api2 provider: data from mod e api2
+Jul 24 11:50:05 valery-vbox kernel: mod_k_dapi123: data from api3 provider: e003e003
+#----#
+Modules after load mod_k_dapi123:
+Module                  Size  Used by
+mod_k_dapi123          12288  0
+mod_e_api123           12288  1 mod_k_dapi123
+#----#
+#----#
+Modules before load mod_l_dapi1234:
+Module                  Size  Used by
+#----#
+Loading module: mod_l_dapi1234
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_l_dapi1234
+Loading module: mod_l_dapi1234 success
+Logs from mod_l_dapi1234 module:
+Jul 24 11:50:05 valery-vbox kernel: mod_l_dapi1234: init mod_l default dependencies on mod_fb_api12,mod_fc_api34
+Jul 24 11:50:05 valery-vbox kernel: mod_l_dapi1234: data from api1 provider: data from mod fb api1
+Jul 24 11:50:05 valery-vbox kernel: mod_l_dapi1234: data from api2 provider: data from mod fb api2
+Jul 24 11:50:05 valery-vbox kernel: mod_l_dapi1234: data from api3 provider: fc03fc03
+Jul 24 11:50:05 valery-vbox kernel: mod_l_dapi1234: data from api4 provider: fc04fc04
+#----#
+Modules after load mod_l_dapi1234:
+Module                  Size  Used by
+mod_l_dapi1234         12288  0
+mod_fc_api34           12288  1 mod_l_dapi1234
+mod_fb_api12           12288  1 mod_l_dapi1234
+#----#
+#--------------------------------#
+Loading modules with specific deps
+#----#
+Modules before load mod_e_api123:
+Module                  Size  Used by
+#----#
+Loading module: mod_e_api123
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_e_api123
+Loading module: mod_e_api123 success
+Logs from mod_e_api123 module:
+Jul 24 11:50:15 valery-vbox kernel: mod_e_api123: init mod e api123
+#----#
+Modules after load mod_e_api123:
+Module                  Size  Used by
+mod_e_api123           12288  0
+#----#
+#----#
+Modules before load mod_g_dapi1:
+Module                  Size  Used by
+mod_e_api123           12288  0
+#----#
+Loading module: mod_g_dapi1
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_g_dapi1
+Loading module: mod_g_dapi1 success
+Logs from mod_g_dapi1 module:
+Jul 24 11:50:15 valery-vbox kernel: mod_g_dapi1: init mod_g default dependency on mod_a_api1
+Jul 24 11:50:15 valery-vbox kernel: mod_g_dapi1: data from api1 provider: data from mod e api1
+#----#
+Modules after load mod_g_dapi1:
+Module                  Size  Used by
+mod_g_dapi1            12288  0
+mod_e_api123           12288  1 mod_g_dapi1
+#----#
+#----#
+Modules before load mod_h_dapi1:
+Module                  Size  Used by
+mod_g_dapi1            12288  0
+mod_e_api123           12288  1 mod_g_dapi1
+#----#
+Loading module: mod_h_dapi1
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_h_dapi1
+Loading module: mod_h_dapi1 success
+Logs from mod_h_dapi1 module:
+Jul 24 11:50:15 valery-vbox kernel: mod_h_dapi1: init mod_h default dependency on mod_b_api1
+Jul 24 11:50:15 valery-vbox kernel: mod_h_dapi1: data from api1 provider: data from mod e api1
+#----#
+Modules after load mod_h_dapi1:
+Module                  Size  Used by
+mod_h_dapi1            12288  0
+mod_g_dapi1            12288  0
+mod_e_api123           12288  2 mod_g_dapi1,mod_h_dapi1
+#----#
+#----#
+Modules before load mod_b_api1:
+Module                  Size  Used by
+#----#
+Loading module: mod_b_api1
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_b_api1
+Loading module: mod_b_api1 success
+Logs from mod_b_api1 module:
+Jul 24 11:50:15 valery-vbox kernel: mod_h_dapi1: init mod_h default dependency on mod_b_api1
+Jul 24 11:50:15 valery-vbox kernel: mod_h_dapi1: Goodbye mod_h default dependency on mod_b_api1
+Jul 24 11:50:15 valery-vbox kernel: mod_b_api1: init mod b api1
+#----#
+Modules after load mod_b_api1:
+Module                  Size  Used by
+mod_b_api1             12288  0
+#----#
+#----#
+Modules before load mod_f_api2:
+Module                  Size  Used by
+mod_b_api1             12288  0
+#----#
+Loading module: mod_f_api2
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_f_api2
+Loading module: mod_f_api2 success
+Logs from mod_f_api2 module:
+Jul 24 11:50:16 valery-vbox kernel: mod_f_api2: init mod f api2
+#----#
+Modules after load mod_f_api2:
+Module                  Size  Used by
+mod_f_api2             12288  0
+mod_b_api1             12288  0
+#----#
+#----#
+Modules before load mod_j_dapi12:
+Module                  Size  Used by
+mod_f_api2             12288  0
+mod_b_api1             12288  0
+#----#
+Loading module: mod_j_dapi12
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_j_dapi12
+Loading module: mod_j_dapi12 success
+Logs from mod_j_dapi12 module:
+Jul 24 11:50:16 valery-vbox kernel: mod_j_dapi12: init mod_j default dependency on mod_c_api1, mod_d_api2
+Jul 24 11:50:16 valery-vbox kernel: mod_j_dapi12: data from api1 provider: data from mod b api1
+Jul 24 11:50:16 valery-vbox kernel: mod_j_dapi12: data from api2 provider: data from mod f api2
+#----#
+Modules after load mod_j_dapi12:
+Module                  Size  Used by
+mod_j_dapi12           12288  0
+mod_f_api2             12288  1 mod_j_dapi12
+mod_b_api1             12288  1 mod_j_dapi12
+#----#
+#--------------------------------#
+Loading one api provider instead of two separate
+#----#
+Modules before load mod_e_api123:
+Module                  Size  Used by
+#----#
+Loading module: mod_e_api123
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_e_api123
+Loading module: mod_e_api123 success
+Logs from mod_e_api123 module:
+Jul 24 11:50:26 valery-vbox kernel: mod_e_api123: init mod e api123
+#----#
+Modules after load mod_e_api123:
+Module                  Size  Used by
+mod_e_api123           12288  0
+#----#
+#----#
+Modules before load mod_j_dapi12:
+Module                  Size  Used by
+mod_e_api123           12288  0
+#----#
+Loading module: mod_j_dapi12
+CMD: /home/valery/kmod_modules_alternatives/kmod_inst/usr/bin/modprobe -d /home/valery/kmod_modules_alternatives/kmod_inst/moddb_alt mod_j_dapi12
+Loading module: mod_j_dapi12 success
+Logs from mod_j_dapi12 module:
+Jul 24 11:50:26 valery-vbox kernel: mod_j_dapi12: init mod_j default dependency on mod_c_api1, mod_d_api2
+Jul 24 11:50:26 valery-vbox kernel: mod_j_dapi12: data from api1 provider: data from mod e api1
+Jul 24 11:50:26 valery-vbox kernel: mod_j_dapi12: data from api2 provider: data from mod e api2
+#----#
+Modules after load mod_j_dapi12:
+Module                  Size  Used by
+mod_j_dapi12           12288  0
+mod_e_api123           12288  1 mod_j_dapi12
+#----#
+#--------------------------------#
